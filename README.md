@@ -28,4 +28,4 @@ The WYVRN SDK is the combination of AI, Chroma, and Razer Sensa HD Haptics in a 
 
 ## Latest
 
-See [https://wyvrn.com](https://wyvrn.com) and [https://doc.wyvrn.com/](https://doc.wyvrn.com) for the latest updates and documentation about the WYVRN SDK.
+See [https://wyvrn.com](https://wyvrn.com) and [https://doc.wyvrn.com](https://doc.wyvrn.com) for the latest updates and documentation about the WYVRN SDK.
