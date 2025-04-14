@@ -171,7 +171,7 @@ void ExecuteEffect();
 
 void Cleanup()
 {
-	if (WyvrnAPI::IsInitializedAPI())
+	if (WyvrnAPI::GetIsInitializedAPI())
 	{
 		if (_gWyvrnInitialized)
 		{
@@ -189,10 +189,6 @@ void Cleanup()
 int main()
 {
 	fprintf(stderr, "App launched!\r\n");
-	if (WyvrnAPI::InitAPI() != RZRESULT_SUCCESS)
-	{
-		return -1;
-	}
 
 	WyvrnSDK::APPINFOTYPE appInfo = {};
 

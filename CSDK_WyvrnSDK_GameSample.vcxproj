@@ -350,8 +350,9 @@ COPY /Y "*.PDB" $(OutDir)</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CpuUsage.h" />
-    <ClInclude Include="Razer\WyvrnAPI.h" />
+    <ClInclude Include="Razer\UnicodeWyvrnAPI.h" />
     <ClInclude Include="HandleInput.h" />
+    <ClInclude Include="Razer\WyvrnAPI.h" />
     <ClInclude Include="Razer\WyvrnLogger.h" />
     <ClInclude Include="Razer\WyvrnSDKTypes.h" />
     <ClInclude Include="Razer\WyvrnErrors.h" />
@@ -361,6 +362,7 @@ COPY /Y "*.PDB" $(OutDir)</Command>
   <ItemGroup>
     <ClCompile Include="CpuUsage.cpp" />
     <ClCompile Include="HandleInput.cpp" />
+    <ClCompile Include="Razer\UnicodeWyvrnAPI.cpp" />
     <ClCompile Include="Razer\WyvrnAPI.cpp" />
     <ClCompile Include="Razer\WyvrnLogger.cpp" />
     <ClCompile Include="Razer\VerifyLibrarySignature.cpp" />
