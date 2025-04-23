@@ -260,7 +260,7 @@ int main()
 		else if (inputUp.WasReleased(true))
 		{
 			ClearManualInput();
-			if (_gSelection > 0)
+			if (_gSelection > 1)
 			{
 				--_gSelection;
 			}
@@ -359,49 +359,49 @@ void ExecuteEffect()
 
 	switch (_gSelection)
 	{	
-	case 0:
+	case 1:
 		ShowEffect1();
 		break;
-	case 1:
+	case 2:
 		ShowEffect2();
 		break;
-	case 2:
+	case 3:
 		ShowEffect3();
 		break;
-	case 3:
+	case 4:
 		ShowEffect4();
 		break;
-	case 4:
+	case 5:
 		ShowEffect5();
 		break;
-	case 5:
+	case 6:
 		ShowEffect6();
 		break;
-	case 6:
+	case 7:
 		ShowEffect7();
 		break;
-	case 7:
+	case 8:
 		ShowEffect8();
 		break;
-	case 8:
+	case 9:
 		ShowEffect9();
 		break;
-	case 9:
+	case 10:
 		ShowEffect10();
 		break;
-	case 10:
+	case 11:
 		ShowEffect11();
 		break;
-	case 11:
+	case 12:
 		ShowEffect12();
 		break;
-	case 12:
+	case 13:
 		ShowEffect13();
 		break;
-	case 13:
+	case 14:
 		ShowEffect14();
 		break;
-	case 14:
+	case 15:
 		ShowEffect15();
 		break;
 	}
