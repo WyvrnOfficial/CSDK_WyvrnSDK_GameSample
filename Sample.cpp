@@ -192,8 +192,8 @@ int main()
 
 	WyvrnSDK::APPINFOTYPE appInfo = {};
 
-	_tcscpy_s(appInfo.Title, 256, L"C++ Wyvrn Game Sample Application");
-	_tcscpy_s(appInfo.Description, 1024, L"A sample application using Razer Wyvrn SDK");
+	_tcscpy_s(appInfo.Title, 256, L"Game Sample: Application");
+	_tcscpy_s(appInfo.Description, 1024, L"A C++ sample application using Razer Wyvrn SDK");
 	_tcscpy_s(appInfo.Author.Name, 256, L"Razer");
 	_tcscpy_s(appInfo.Author.Contact, 256, L"https://wyvrn.com");
 
