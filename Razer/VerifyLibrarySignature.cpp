@@ -101,18 +101,21 @@ namespace WyvrnSDK
 								// Allocate memory for subject name.
 								szName = (wchar_t*)LocalAlloc(LPTR, dwData * sizeof(wchar_t));
 
-								// Get subject name.
-								if (CertGetNameStringW(pCertContext,
-									CERT_NAME_SIMPLE_DISPLAY_TYPE,
-									0,
-									NULL,
-									szName,
-									dwData) > 1)
+								if (nullptr != szName)
 								{
-									// Compare the issuer
-									if (_wcsicmp(szName, L"Razer USA Ltd.") == 0)
+									// Get subject name.
+									if (CertGetNameStringW(pCertContext,
+										CERT_NAME_SIMPLE_DISPLAY_TYPE,
+										0,
+										NULL,
+										szName,
+										dwData) > 1)
 									{
-										bResult = TRUE;
+										// Compare the issuer
+										if (_wcsicmp(szName, L"Razer USA Ltd.") == 0)
+										{
+											bResult = TRUE;
+										}
 									}
 								}
 							}
@@ -278,7 +281,7 @@ namespace WyvrnSDK
 		LPBYTE lpBuffer = NULL;
 		DWORD  verSize = GetFileVersionInfoSizeW(filename.c_str(), &verHandle);
 
-		if (verSize)
+		if (verSize && !verHandle)
 		{
 			LPSTR verData = (LPSTR)malloc(verSize);
 
