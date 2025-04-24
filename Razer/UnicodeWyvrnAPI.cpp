@@ -81,7 +81,7 @@ int UnicodeWyvrnAPI::InitAPI()
 	// 2. The system directory.Use the GetSystemDirectory function to get the path of this directory.
 
 	wchar_t pathTemp[MAX_PATH];
-	if (GetSystemDirectory(pathTemp, sizeof(pathTemp)))
+	if (GetSystemDirectoryW(pathTemp, sizeof(pathTemp)))
 	{
 		path = pathTemp;
 
@@ -112,7 +112,7 @@ int UnicodeWyvrnAPI::InitAPI()
 		return RZRESULT_DLL_INVALID_SIGNATURE;
 	}
 
-	HMODULE library = LoadLibrary(path.c_str());
+	HMODULE library = LoadLibraryW(path.c_str());
 	if (library == NULL)
 	{
 		WyvrnLogger::fprintf(stderr, "Failed to load Chromatic Library!\r\n");

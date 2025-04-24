@@ -14,9 +14,9 @@
 
 #pragma comment (lib, "wintrust")
 #pragma comment (lib, "Psapi")
-#pragma comment(lib, "crypt32")
-#pragma comment(lib, "ShLwApi")
-#pragma comment(lib, "version")
+#pragma comment (lib, "crypt32")
+#pragma comment (lib, "ShLwApi")
+#pragma comment (lib, "version")
 
 using namespace std;
 
@@ -39,7 +39,7 @@ namespace WyvrnSDK
 		DWORD dwEncoding = 0;
 		DWORD dwContentType = 0;
 		DWORD dwFormatType = 0;
-		LPTSTR szName = NULL;
+		wchar_t* szName = NULL;
 		PCMSG_SIGNER_INFO pSignerInfo = NULL;
 		PCCERT_CONTEXT pCertContext = NULL;
 
@@ -65,53 +65,55 @@ namespace WyvrnSDK
 			{
 				// Allocate memory for signer information.
 				pSignerInfo = (PCMSG_SIGNER_INFO)LocalAlloc(LPTR, dwSignerInfo);
-
-				if (TRUE == CryptMsgGetParam(hMsg,
-					CMSG_SIGNER_INFO_PARAM,
-					0,
-					(PVOID)pSignerInfo,
-					&dwSignerInfo))
+				if (pSignerInfo != nullptr)
 				{
-					CERT_INFO CertInfo = {};
-					CertInfo.Issuer = pSignerInfo->Issuer;
-					CertInfo.SerialNumber = pSignerInfo->SerialNumber;
-
-					pCertContext = CertFindCertificateInStore(hStore,
-						(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING),
+					if (TRUE == CryptMsgGetParam(hMsg,
+						CMSG_SIGNER_INFO_PARAM,
 						0,
-						CERT_FIND_SUBJECT_CERT,
-						(PVOID)&CertInfo,
-						NULL);
-
-					if (pCertContext != NULL)
+						(PVOID)pSignerInfo,
+						&dwSignerInfo))
 					{
-						DWORD dwData = 0;
+						CERT_INFO CertInfo = {};
+						CertInfo.Issuer = pSignerInfo->Issuer;
+						CertInfo.SerialNumber = pSignerInfo->SerialNumber;
 
-						// Get Subject name size.
-						dwData = CertGetNameString(pCertContext,
-							CERT_NAME_SIMPLE_DISPLAY_TYPE,
+						pCertContext = CertFindCertificateInStore(hStore,
+							(X509_ASN_ENCODING | PKCS_7_ASN_ENCODING),
 							0,
-							NULL,
-							NULL,
-							0);
+							CERT_FIND_SUBJECT_CERT,
+							(PVOID)&CertInfo,
+							NULL);
 
-						if (dwData > 1)
+						if (pCertContext != NULL)
 						{
-							// Allocate memory for subject name.
-							szName = (LPTSTR)LocalAlloc(LPTR, dwData * sizeof(TCHAR));
+							DWORD dwData = 0;
 
-							// Get subject name.
-							if (CertGetNameString(pCertContext,
+							// Get Subject name size.
+							dwData = CertGetNameString(pCertContext,
 								CERT_NAME_SIMPLE_DISPLAY_TYPE,
 								0,
 								NULL,
-								szName,
-								dwData) > 1)
+								NULL,
+								0);
+
+							if (dwData > 1)
 							{
-								// Compare the issuer
-								if (_tcsicmp(szName, L"Razer USA Ltd.") == 0)
+								// Allocate memory for subject name.
+								szName = (wchar_t*)LocalAlloc(LPTR, dwData * sizeof(wchar_t));
+
+								// Get subject name.
+								if (CertGetNameStringW(pCertContext,
+									CERT_NAME_SIMPLE_DISPLAY_TYPE,
+									0,
+									NULL,
+									szName,
+									dwData) > 1)
 								{
-									bResult = TRUE;
+									// Compare the issuer
+									if (_wcsicmp(szName, L"Razer USA Ltd.") == 0)
+									{
+										bResult = TRUE;
+									}
 								}
 							}
 						}
@@ -274,55 +276,58 @@ namespace WyvrnSDK
 		DWORD  verHandle = 0;
 		UINT   size = 0;
 		LPBYTE lpBuffer = NULL;
-		DWORD  verSize = GetFileVersionInfoSize(filename.c_str(), &verHandle);
+		DWORD  verSize = GetFileVersionInfoSizeW(filename.c_str(), &verHandle);
 
 		if (verSize)
 		{
 			LPSTR verData = (LPSTR)malloc(verSize);
 
-			if (GetFileVersionInfo(filename.c_str(), verHandle, verSize, verData))
+			if (verData != nullptr)
 			{
-				if (VerQueryValue(verData, L"\\", (VOID FAR * FAR*) & lpBuffer, &size))
+				if (GetFileVersionInfoW(filename.c_str(), verHandle, verSize, verData))
 				{
-					if (size)
+					if (VerQueryValueW(verData, L"\\", (VOID FAR * FAR*) & lpBuffer, &size))
 					{
-						VS_FIXEDFILEINFO* verInfo = (VS_FIXEDFILEINFO*)lpBuffer;
-						if (verInfo->dwSignature == 0xfeef04bd)
+						if (size)
 						{
-							const int major = (verInfo->dwFileVersionMS >> 16) & 0xffff;
-							const int minor = (verInfo->dwFileVersionMS >> 0) & 0xffff;
-							const int revision = (verInfo->dwFileVersionLS >> 16) & 0xffff;
-							const int build = (verInfo->dwFileVersionLS >> 0) & 0xffff;
+							VS_FIXEDFILEINFO* verInfo = (VS_FIXEDFILEINFO*)lpBuffer;
+							if (verInfo->dwSignature == 0xfeef04bd)
+							{
+								const int major = (verInfo->dwFileVersionMS >> 16) & 0xffff;
+								const int minor = (verInfo->dwFileVersionMS >> 0) & 0xffff;
+								const int revision = (verInfo->dwFileVersionLS >> 16) & 0xffff;
+								const int build = (verInfo->dwFileVersionLS >> 0) & 0xffff;
 
-							WyvrnLogger::wprintf(L"File Version: %d.%d.%d.%d %s\r\n", major, minor, revision, build, filename.c_str());
+								WyvrnLogger::wprintf(L"File Version: %d.%d.%d.%d %s\r\n", major, minor, revision, build, filename.c_str());
 
-							// Anything less than the min version returns false
+								// Anything less than the min version returns false
 
-							if (major < minMajor) // Less than X
-							{
-								result = false;
-							}
-							else if (major == minMajor && minor < minMinor) // Less than major.X
-							{
-								result = false;
-							}
-							else if (major == minMajor && minor == minMinor && revision < minRevision) // Less than major.minor.X
-							{
-								result = false;
-							}
-							else if (major == minMajor && minor == minMinor && revision == minRevision && build < minBuild) // Less than major.minor.revision.X
-							{
-								result = false;
-							}
-							else
-							{
-								result = true; // production version or better
+								if (major < minMajor) // Less than X
+								{
+									result = false;
+								}
+								else if (major == minMajor && minor < minMinor) // Less than major.X
+								{
+									result = false;
+								}
+								else if (major == minMajor && minor == minMinor && revision < minRevision) // Less than major.minor.X
+								{
+									result = false;
+								}
+								else if (major == minMajor && minor == minMinor && revision == minRevision && build < minBuild) // Less than major.minor.revision.X
+								{
+									result = false;
+								}
+								else
+								{
+									result = true; // production version or better
+								}
 							}
 						}
 					}
 				}
+				free(verData);
 			}
-			free(verData);
 		}
 
 		return result;

@@ -74,7 +74,7 @@ namespace WyvrnSDK {
 			}
 			if (!_sIsInitializedAPI)
 			{
-				return RZRESULT_FAILED;
+				return static_cast<RZRESULT>(RZRESULT_FAILED);
 			}
 		}
 		if (_sInitialized)
@@ -91,7 +91,7 @@ namespace WyvrnSDK {
 	/*
 		Direct access to low level API.
 	*/
-	RZRESULT WyvrnAPI::CoreSetEventName(LPCTSTR name)
+	RZRESULT WyvrnAPI::CoreSetEventName(const wchar_t* name)
 	{
 		if (!_sIsInitializedAPI)
 		{

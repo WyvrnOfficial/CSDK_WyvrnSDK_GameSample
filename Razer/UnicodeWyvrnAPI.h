@@ -10,7 +10,7 @@ typedef RZRESULT	(*PLUGIN_CORE_INIT_SDK)(WyvrnSDK::APPINFOTYPE* AppInfo);
 /*
 	Direct access to low level API.
 */
-typedef RZRESULT	(*PLUGIN_CORE_SET_EVENT_NAME)(LPCTSTR Name);
+typedef RZRESULT	(*PLUGIN_CORE_SET_EVENT_NAME)(const wchar_t* name);
 /*
 	Direct access to low level API.
 */
