@@ -23,7 +23,7 @@ namespace WyvrnSDK
 		/*
 			Direct access to low level API.
 		*/
-		static RZRESULT CoreSetEventName(const wchar_t* Name);
+		static RZRESULT CoreSetEventName(const wchar_t* name);
 		/*
 			Direct access to low level API.
 		*/
